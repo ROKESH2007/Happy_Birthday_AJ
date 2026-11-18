@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Happy Birthday Arulselvi 💕</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- Floating Background Hearts Canvas -->
+  <canvas id="heartsCanvas"></canvas>
+
+  <!-- Celebration Confetti Cannon Canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- Background Song (Audio-only decoding, no heavy video decoding) -->
+  <audio id="bgMusic" loop preload="metadata" src="WhatsApp Video 2026-11-18 at 11.11.22 PM.mp4"></audio>
+
+  <!-- Responsive Wrapper (Adapts to laptop size on laptops, mobile size on phones) -->
+  <div class="desktop-wrapper">
+    <main class="phone-container app-container">
+
+      <!-- Top Navigation Header -->
+      <header class="app-header">
+        <button id="backBtn" class="header-btn hidden" aria-label="Go back">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Back</span>
+        </button>
+
+        <!-- Dynamic Counter Badge for Balloon Stage -->
+        <span id="balloonBadge" class="badge-counter" style="display: none;">0/4 POPPED</span>
+      </header>
+
+      <!-- Screen Viewport for all 8 Stages -->
+      <div class="screen-viewport">
+
+        <!-- ================= STAGE 1: PASSCODE SCREEN ================= -->
+        <section id="stage-passcode" class="screen-stage active">
+          <!-- 3D Heart Padlock & Key SVG Art -->
+          <div class="padlock-art">
+            <svg viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="lockGrad" x1="20" y1="20" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#ff758c" />
+                  <stop offset="0.5" stop-color="#ff7eb3" />
+                  <stop offset="1" stop-color="#f43f7a" />
+                </linearGradient>
+                <linearGradient id="shackleGrad" x1="40" y1="10" x2="100" y2="70" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#ffd166" />
+                  <stop offset="0.5" stop-color="#f59e0b" />
+                  <stop offset="1" stop-color="#d97706" />
+                </linearGradient>
+                <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#f43f7a" flood-opacity="0.3" />
+                </filter>
+              </defs>
+              <!-- Shackle -->
+              <path d="M48 55V38C48 25.8497 57.8497 16 70 16C82.1503 16 92 25.8497 92 38V55" stroke="url(#shackleGrad)"
+                stroke-width="12" stroke-linecap="round" />
+              <!-- Heart Body -->
+              <path filter="url(#glowEffect)"
+                d="M70 120C70 120 28 92 28 62C28 47.6406 39.6406 36 54 36C62.5 36 67.5 40 70 44C72.5 40 77.5 36 86 36C100.359 36 112 47.6406 112 62C112 92 70 120 70 120Z"
+                fill="url(#lockGrad)" />
+              <!-- Heart Highlights -->
+              <path d="M42 58C42 50 48 44 56 44" stroke="white" stroke-width="4" stroke-linecap="round" opacity="0.6" />
+              <!-- Keyhole -->
+              <circle cx="70" cy="70" r="7" fill="#831843" />
+              <polygon points="66,73 74,73 72,86 68,86" fill="#831843" />
+              <!-- Golden Key floating -->
+              <g transform="translate(90, 22) rotate(25) scale(0.65)">
+                <circle cx="20" cy="20" r="14" stroke="url(#shackleGrad)" stroke-width="6" fill="none" />
+                <circle cx="20" cy="20" r="6" fill="url(#shackleGrad)" />
+                <rect x="30" y="16" width="35" height="8" rx="4" fill="url(#shackleGrad)" />
+                <rect x="52" y="24" width="6" height="10" rx="2" fill="url(#shackleGrad)" />
+                <rect x="61" y="24" width="5" height="8" rx="2" fill="url(#shackleGrad)" />
+              </g>
+              <!-- Confetti Ribbons -->
+              <circle cx="20" cy="30" r="3" fill="#ffd166" />
+              <circle cx="120" cy="40" r="3.5" fill="#06d6a0" />
+              <circle cx="115" cy="100" r="3" fill="#ffbe0b" />
+              <circle cx="25" cy="105" r="4" fill="#a855f7" />
+            </svg>
+          </div>
+
+          <div class="passcode-header">
+            <h2>ENTER PASSCODE</h2>
+            <div class="passcode-inputs">
+              <div id="pin0" class="pin-box active"></div>
+              <div id="pin1" class="pin-box"></div>
+              <div id="pin2" class="pin-box"></div>
+              <div id="pin3" class="pin-box"></div>
+            </div>
+            <p class="passcode-hint" id="passcodeHint">Something special is waiting for you (Hint: 2519)</p>
+          </div>
+
+          <!-- 3x4 Glassmorphic Keypad -->
+          <div class="keypad-grid" id="keypadGrid">
+            <button class="key-btn" data-key="1">1</button>
+            <button class="key-btn" data-key="2">2</button>
+            <button class="key-btn" data-key="3">3</button>
+            <button class="key-btn" data-key="4">4</button>
+            <button class="key-btn" data-key="5">5</button>
+            <button class="key-btn" data-key="6">6</button>
+            <button class="key-btn" data-key="7">7</button>
+            <button class="key-btn" data-key="8">8</button>
+            <button class="key-btn" data-key="9">9</button>
+            <button class="key-btn action" data-key="clear">✕</button>
+            <button class="key-btn" data-key="0">0</button>
+            <button class="key-btn action" data-key="back">⌫</button>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 2: BIRTHDAY GREETING ================= -->
+        <section id="stage-greeting" class="screen-stage">
+          <div class="greeting-card">
+            <h1 class="screen-title script">Happy Birthday,<br><span class="recipient-name">Arulselvi</span></h1>
+
+            <!-- Cute Animated Bears & Cake Illustration -->
+            <div class="bears-art-wrapper">
+              <svg viewBox="0 0 280 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Festive Bunting Banner -->
+                <path d="M20 30 Q 140 60 260 30" stroke="#ff758c" stroke-width="2" stroke-dasharray="4 2" />
+                <polygon points="50,37 65,39 57,56" fill="#f43f7a" />
+                <polygon points="90,43 105,45 97,62" fill="#ffd166" />
+                <polygon points="135,46 150,46 142,65" fill="#06d6a0" />
+                <polygon points="180,45 195,43 187,62" fill="#118ab2" />
+                <polygon points="220,39 235,37 227,56" fill="#a855f7" />
+
+                <!-- Left Bear (Brown Teddy) -->
+                <g transform="translate(50, 75)">
+                  <!-- Body -->
+                  <ellipse cx="40" cy="85" rx="36" ry="40" fill="#c68b59" />
+                  <ellipse cx="40" cy="88" rx="22" ry="26" fill="#f7d4b2" />
+                  <!-- Head -->
+                  <circle cx="40" cy="42" r="32" fill="#c68b59" />
+                  <!-- Ears -->
+                  <circle cx="16" cy="18" r="12" fill="#c68b59" />
+                  <circle cx="16" cy="18" r="6" fill="#a06334" />
+                  <circle cx="64" cy="18" r="12" fill="#c68b59" />
+                  <circle cx="64" cy="18" r="6" fill="#a06334" />
+                  <!-- Party Hat -->
+                  <polygon points="40,0 28,26 52,26" fill="#118ab2" />
+                  <circle cx="40" cy="0" r="4" fill="#ffd166" />
+                  <!-- Snout -->
+                  <ellipse cx="40" cy="48" rx="14" ry="10" fill="#f7d4b2" />
+                  <ellipse cx="40" cy="44" rx="5" ry="3.5" fill="#4a2511" />
+                  <path d="M37 50 Q 40 54 43 50" stroke="#4a2511" stroke-width="2" stroke-linecap="round" />
+                  <!-- Eyes -->
+                  <circle cx="30" cy="38" r="3.5" fill="#2d1508" />
+                  <circle cx="50" cy="38" r="3.5" fill="#2d1508" />
+                  <!-- Blush -->
+                  <ellipse cx="23" cy="46" rx="5" ry="3" fill="#ff7eb3" opacity="0.7" />
+                  <ellipse cx="57" cy="46" rx="5" ry="3" fill="#ff7eb3" opacity="0.7" />
+                </g>
+
+                <!-- Right Bear / Bunny (White Bunny) -->
+                <g transform="translate(145, 75)">
+                  <!-- Body -->
+                  <ellipse cx="45" cy="85" rx="36" ry="40" fill="#ffffff" />
+                  <ellipse cx="45" cy="88" rx="22" ry="26" fill="#fff0f5" />
+                  <!-- Head -->
+                  <circle cx="45" cy="42" r="32" fill="#ffffff" />
+                  <!-- Ears -->
+                  <ellipse cx="26" cy="14" rx="8" ry="16" fill="#ffffff" />
+                  <ellipse cx="26" cy="14" rx="4" ry="10" fill="#ffb6c1" />
+                  <ellipse cx="64" cy="14" rx="8" ry="16" fill="#ffffff" />
+                  <ellipse cx="64" cy="14" rx="4" ry="10" fill="#ffb6c1" />
+                  <!-- Party Hat -->
+                  <polygon points="45,-4 34,22 56,22" fill="#ff6b98" />
+                  <circle cx="45" cy="-4" r="4" fill="#06d6a0" />
+                  <!-- Snout -->
+                  <ellipse cx="45" cy="46" rx="4" ry="3" fill="#ff7eb3" />
+                  <path d="M42 51 Q 45 54 48 51" stroke="#4a2511" stroke-width="2" stroke-linecap="round" />
+                  <!-- Eyes -->
+                  <circle cx="36" cy="38" r="3.5" fill="#2d1508" />
+                  <circle cx="54" cy="38" r="3.5" fill="#2d1508" />
+                  <!-- Blush -->
+                  <ellipse cx="30" cy="46" rx="5" ry="3" fill="#ff7eb3" opacity="0.8" />
+                  <ellipse cx="60" cy="46" rx="5" ry="3" fill="#ff7eb3" opacity="0.8" />
+                </g>
+
+                <!-- Birthday Cake in Center -->
+                <g transform="translate(105, 148)">
+                  <rect x="0" y="24" width="70" height="28" rx="6" fill="#f7cad0" />
+                  <rect x="0" y="24" width="70" height="8" rx="4" fill="#ffffff" />
+                  <rect x="10" y="4" width="50" height="22" rx="4" fill="#ffffff" />
+                  <rect x="10" y="4" width="50" height="6" rx="3" fill="#ff758c" />
+                  <!-- Candle -->
+                  <rect x="32" y="-12" width="6" height="16" rx="2" fill="#ffd166" />
+                  <!-- Flame -->
+                  <path d="M35 -24 Q 38 -17 35 -12 Q 32 -17 35 -24" fill="#ff9f1c" />
+                  <!-- Cake Platter -->
+                  <ellipse cx="35" cy="54" rx="44" ry="7" fill="#e2e8f0" />
+                  <text x="35" y="42" font-family="'Outfit', sans-serif" font-size="6.5" font-weight="700"
+                    fill="#d81b60" text-anchor="middle">HAPPY BIRTHDAY</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Excitement Dialogue Box -->
+            <div class="interactive-dialog-card">
+              <p class="dialog-text">Are you excited for what's next? ✨</p>
+              <button id="yesExcitedBtn" class="btn-primary" style="margin-top: 0;">
+                <span>Yes ❤️</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 3: BALLOON POPPING GAME ================= -->
+        <section id="stage-balloons" class="screen-stage">
+          <div>
+            <h2 class="screen-title">Pop all 4 balloons 💕</h2>
+            <p class="screen-subtitle">Tap each balloon to reveal something special</p>
+          </div>
+
+          <!-- 2x2 Grid of Floating Balloons -->
+          <div class="balloons-grid">
+            <!-- Balloon 1: Sky Blue -->
+            <div class="balloon-item" data-balloon="1">
+              <div class="balloon-svg-wrap">
+                <svg viewBox="0 0 100 130" fill="none">
+                  <defs>
+                    <radialGradient id="balloonBlue" cx="35%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#bde0fe" />
+                      <stop offset="65%" stop-color="#90b8f8" />
+                      <stop offset="100%" stop-color="#4880ec" />
+                    </radialGradient>
+                  </defs>
+                  <ellipse cx="50" cy="46" rx="38" ry="46" fill="url(#balloonBlue)" />
+                  <ellipse cx="36" cy="30" rx="8" ry="16" fill="white" opacity="0.5" transform="rotate(-20 36 30)" />
+                  <polygon points="46,92 54,92 50,98" fill="#4880ec" />
+                  <path d="M50 98 Q 42 110 54 118 Q 46 124 50 130" stroke="#779ee8" stroke-width="1.8" fill="none" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Balloon 2: Blush Rose Pink -->
+            <div class="balloon-item" data-balloon="2">
+              <div class="balloon-svg-wrap">
+                <svg viewBox="0 0 100 130" fill="none">
+                  <defs>
+                    <radialGradient id="balloonPink" cx="35%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#ffe5ec" />
+                      <stop offset="65%" stop-color="#ff9bbb" />
+                      <stop offset="100%" stop-color="#f43f7a" />
+                    </radialGradient>
+                  </defs>
+                  <ellipse cx="50" cy="46" rx="38" ry="46" fill="url(#balloonPink)" />
+                  <ellipse cx="36" cy="30" rx="8" ry="16" fill="white" opacity="0.5" transform="rotate(-20 36 30)" />
+                  <polygon points="46,92 54,92 50,98" fill="#f43f7a" />
+                  <path d="M50 98 Q 58 110 46 118 Q 54 124 50 130" stroke="#ff758c" stroke-width="1.8" fill="none" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Balloon 3: Mint Green -->
+            <div class="balloon-item" data-balloon="3">
+              <div class="balloon-svg-wrap">
+                <svg viewBox="0 0 100 130" fill="none">
+                  <defs>
+                    <radialGradient id="balloonMint" cx="35%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#d8f3dc" />
+                      <stop offset="65%" stop-color="#95d5b2" />
+                      <stop offset="100%" stop-color="#40916c" />
+                    </radialGradient>
+                  </defs>
+                  <ellipse cx="50" cy="46" rx="38" ry="46" fill="url(#balloonMint)" />
+                  <ellipse cx="36" cy="30" rx="8" ry="16" fill="white" opacity="0.5" transform="rotate(-20 36 30)" />
+                  <polygon points="46,92 54,92 50,98" fill="#40916c" />
+                  <path d="M50 98 Q 42 110 54 118 Q 46 124 50 130" stroke="#52b788" stroke-width="1.8" fill="none" />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Balloon 4: Lilac Lavender -->
+            <div class="balloon-item" data-balloon="4">
+              <div class="balloon-svg-wrap">
+                <svg viewBox="0 0 100 130" fill="none">
+                  <defs>
+                    <radialGradient id="balloonLilac" cx="35%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#e2d9f3" />
+                      <stop offset="65%" stop-color="#c4b5fd" />
+                      <stop offset="100%" stop-color="#8b5cf6" />
+                    </radialGradient>
+                  </defs>
+                  <ellipse cx="50" cy="46" rx="38" ry="46" fill="url(#balloonLilac)" />
+                  <ellipse cx="36" cy="30" rx="8" ry="16" fill="white" opacity="0.5" transform="rotate(-20 36 30)" />
+                  <polygon points="46,92 54,92 50,98" fill="#8b5cf6" />
+                  <path d="M50 98 Q 58 110 46 118 Q 54 124 50 130" stroke="#a78bfa" stroke-width="1.8" fill="none" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Revealed Secret Message -->
+          <div class="revealed-message-container">
+            <h3 class="revealed-words" id="revealedMessage"></h3>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 4: CAKE & CANDLE BLOWING ================= -->
+        <section id="stage-cake" class="screen-stage">
+          <div>
+            <h2 class="screen-title">Blow the candle,<br><span class="recipient-name">Arulselvi</span></h2>
+            <p class="screen-subtitle">Make a heartfelt birthday wish</p>
+          </div>
+
+          <!-- Birthday Cake with Lit Candle -->
+          <div class="cake-visual-wrap" title="Tap candle to blow it out!">
+            <svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <!-- Cake Plate -->
+              <ellipse cx="120" cy="190" rx="90" ry="20" fill="#f1f5f9" />
+              <ellipse cx="120" cy="186" rx="82" ry="16" fill="#e2e8f0" />
+
+              <!-- Cake Base Layer -->
+              <path
+                d="M48 145 C48 145 48 175 120 175 C192 175 192 145 192 145 L192 125 C192 125 192 155 120 155 C48 155 48 125 48 125 Z"
+                fill="#6d3d28" />
+              <ellipse cx="120" cy="125" rx="72" ry="24" fill="#fff5f8" />
+
+              <!-- Cream Drips -->
+              <path
+                d="M48 125 C55 140 65 140 72 125 C80 142 90 142 98 125 C106 142 116 142 124 125 C132 142 142 142 150 125 C158 142 168 142 176 125 C184 138 190 135 192 125"
+                stroke="#ffffff" stroke-width="10" stroke-linecap="round" fill="none" />
+
+              <!-- Strawberries / Sprinkles -->
+              <circle cx="85" cy="120" r="5" fill="#f43f7a" />
+              <circle cx="110" cy="128" r="4.5" fill="#ffd166" />
+              <circle cx="135" cy="126" r="5" fill="#f43f7a" />
+              <circle cx="155" cy="118" r="4" fill="#06d6a0" />
+
+              <!-- Birthday Candle -->
+              <rect x="116" y="70" width="8" height="42" rx="4" fill="#f59e0b" />
+              <path d="M116 78 L124 82 M116 88 L124 92 M116 98 L124 102" stroke="#ffffff" stroke-width="2"
+                opacity="0.7" />
+
+              <!-- Candle Wick -->
+              <line x1="120" y1="70" x2="120" y2="60" stroke="#333333" stroke-width="2.5" stroke-linecap="round" />
+
+              <!-- Animated Candle Flame -->
+              <g id="candleFlame" class="candle-flame">
+                <ellipse cx="120" cy="48" rx="8" ry="14" fill="#ffbe0b" />
+                <ellipse cx="120" cy="50" rx="4.5" ry="9" fill="#fb5607" />
+                <ellipse cx="120" cy="53" rx="2" ry="4" fill="#ffffff" />
+              </g>
+            </svg>
+          </div>
+
+          <div>
+            <p id="wishMessage" class="wish-message">Close your eyes & make a wish ✨</p>
+            <button id="blowMicBtn" class="mic-action-btn">
+              <span>🎙️ Blow into the mic</span>
+            </button>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 8px;">(or tap the candle directly)</p>
+          </div>
+        </section>
+
+        <!-- ================= STAGE 5: ROSE BOUQUET ================= -->
+        <section id="stage-bouquet" class="screen-stage">
+          <h2 class="screen-title script">Your Rose Bouquet 🌹</h2>
+
+          <div class="bouquet-container">
+            <!-- Background Heart Trees Pattern -->
+            <svg class="bouquet-trees-bg" viewBox="0 0 320 380" fill="none">
+              <!-- Left Tree -->
+              <path d="M40 360 L40 270 Q40 240 20 220 M40 250 Q55 230 65 210" stroke="#d884a6" stroke-width="3"
+                stroke-linecap="round" />
+              <circle cx="20" cy="215" r="16" fill="#fbcfe8" />
+              <circle cx="65" cy="205" r="14" fill="#fbcfe8" />
+              <circle cx="40" cy="230" r="18" fill="#f472b6" opacity="0.6" />
+              <!-- Right Tree -->
+              <path d="M280 360 L280 270 Q280 240 260 220 M280 250 Q295 230 305 210" stroke="#d884a6" stroke-width="3"
+                stroke-linecap="round" />
+              <circle cx="260" cy="215" r="16" fill="#fbcfe8" />
+              <circle cx="305" cy="205" r="14" fill="#fbcfe8" />
+              <circle cx="280" cy="230" r="18" fill="#f472b6" opacity="0.6" />
+            </svg>
+
+            <!-- Lush 3D Red Roses Bouquet SVG -->
+            <div class="bouquet-center-art">
+              <svg viewBox="0 0 220 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Wrapping Paper -->
+                <polygon points="110,260 40,150 180,150" fill="#d4a373" />
+                <polygon points="110,260 55,140 165,140" fill="#e6ccb2" />
+                <!-- Silk Red Ribbon & Bow -->
+                <path d="M90 200 Q 110 208 130 200 Q 110 215 90 200" fill="#be123c" />
+                <ellipse cx="100" cy="204" rx="10" ry="7" fill="#e11d48" />
+                <ellipse cx="120" cy="204" rx="10" ry="7" fill="#e11d48" />
+                <circle cx="110" cy="204" r="5" fill="#be123c" />
+                <path d="M106 208 Q 98 230 92 240 M114 208 Q 122 230 128 240" stroke="#e11d48" stroke-width="4"
+                  stroke-linecap="round" />
+
+                <!-- Rose Heads Cluster -->
+                <g transform="translate(60, 60)">
+                  <!-- Central Rose -->
+                  <circle cx="50" cy="50" r="26" fill="#e11d48" />
+                  <path d="M50 34 C40 34 36 44 44 54 C54 64 64 54 64 44 C64 34 56 34 50 34 Z" fill="#be123c" />
+                  <circle cx="50" cy="46" r="10" fill="#9f1239" />
+                  <circle cx="50" cy="46" r="4" fill="#881337" />
+                </g>
+                <g transform="translate(20, 70)">
+                  <circle cx="45" cy="45" r="22" fill="#e11d48" />
+                  <circle cx="45" cy="43" r="10" fill="#be123c" />
+                  <circle cx="45" cy="43" r="4" fill="#9f1239" />
+                </g>
+                <g transform="translate(95, 70)">
+                  <circle cx="45" cy="45" r="22" fill="#e11d48" />
+                  <circle cx="45" cy="43" r="10" fill="#be123c" />
+                  <circle cx="45" cy="43" r="4" fill="#9f1239" />
+                </g>
+                <g transform="translate(40, 25)">
+                  <circle cx="45" cy="45" r="22" fill="#e11d48" />
+                  <circle cx="45" cy="43" r="10" fill="#be123c" />
+                  <circle cx="45" cy="43" r="4" fill="#9f1239" />
+                </g>
+                <g transform="translate(80, 25)">
+                  <circle cx="45" cy="45" r="22" fill="#e11d48" />
+                  <circle cx="45" cy="43" r="10" fill="#be123c" />
+                  <circle cx="45" cy="43" r="4" fill="#9f1239" />
+                </g>
+
+                <!-- Little Green Leaves -->
+                <ellipse cx="40" cy="70" rx="10" ry="5" fill="#2d6a4f" transform="rotate(-30 40 70)" />
+                <ellipse cx="180" cy="70" rx="10" ry="5" fill="#2d6a4f" transform="rotate(30 180 70)" />
+                <ellipse cx="110" cy="20" rx="12" ry="6" fill="#2d6a4f" />
+              </svg>
+            </div>
+
+            <!-- Floating Love Notes Badges -->
+            <div class="compliment-badge badge-1">Forever yours 🤍</div>
+            <div class="compliment-badge badge-2">You make my world beautiful ✨</div>
+            <div class="compliment-badge badge-3">You are my sunshine ☀️</div>
+            <div class="compliment-badge badge-4">Happy Birthday <span class="recipient-name">Arulselvi</span> 💕</div>
+            <div class="compliment-badge badge-5">I'm lucky to have you 🥺</div>
+            <div class="compliment-badge badge-6">You're my favorite person 💖</div>
+          </div>
+
+          <button id="bouquetContinueBtn" class="btn-primary">
+            <span>Continue ➔</span>
+          </button>
+        </section>
+
+        <!-- ================= STAGE 6: POLAROID PHOTO CARDS ================= -->
+        <section id="stage-photos" class="screen-stage">
+          <div>
+            <h2 class="screen-title script">Some Sweet Moments</h2>
+            <p class="screen-subtitle">(Swipe the cards)</p>
+          </div>
+
+          <!-- Stacking Polaroid Cards Deck -->
+          <div class="cards-deck-container" id="cardsDeck">
+            <!-- Card 0: photo1.jpg -->
+            <div class="polaroid-card card-0">
+              <div class="photo-frame">
+                <img src="images/photo1.jpg" alt="Our sweet moments" loading="eager" decoding="async">
+              </div>
+              <div class="photo-caption">Our Sweet Moments 💕</div>
+            </div>
+
+            <!-- Card 1: photo2.jpg -->
+            <div class="polaroid-card card-1">
+              <div class="photo-frame">
+                <img src="images/photo2.jpg" alt="Always with you" loading="eager" decoding="async">
+              </div>
+              <div class="photo-caption">Always With You 🥺</div>
+            </div>
+
+            <!-- Card 2: photo3.jpg -->
+            <div class="polaroid-card card-2">
+              <div class="photo-frame">
+                <img src="images/photo3.jpg" alt="Celebrating you" loading="eager" decoding="async">
+              </div>
+              <div class="photo-caption">Celebrating You 🎉</div>
+            </div>
+
+            <!-- Card 3: photo4.jpg -->
+            <div class="polaroid-card card-3">
+              <div class="photo-frame">
+                <img src="images/photo4.jpg" alt="Precious smile" loading="eager" decoding="async">
+              </div>
+              <div class="photo-caption">Precious Smile ✨</div>
+            </div>
+
+            <!-- Card 4: photo5.jpg -->
+            <div class="polaroid-card card-4">
+              <div class="photo-frame">
+                <img src="images/photo5.jpg" alt="My strongest girl" loading="eager" decoding="async">
+              </div>
+              <div class="photo-caption">My Strongest Girl 🥋❤️</div>
+            </div>
+          </div>
+
+          <button id="photosContinueBtn" class="btn-primary">
+            <span>Continue ➔</span>
+          </button>
+        </section>
+
+        <!-- ================= STAGE 7: LOVE LETTER IN ENVELOPE (FINALE) ================= -->
+        <section id="stage-letter" class="screen-stage">
+          <h2 class="screen-title script">A Message From My Heart</h2>
+          <p class="screen-subtitle" id="tapLetterHint"
+            style="cursor: pointer; color: var(--primary-dark); font-weight: 600; font-style: normal; animation: pulse-music 1.5s infinite ease-in-out;">
+            Tap the envelope to open 💌
+          </p>
+
+          <div class="letter-scene-container" style="cursor: pointer;">
+            <!-- 3D Gold Foil Envelope -->
+            <div class="envelope-wrapper" id="envelopeWrap" title="Tap to open the letter!">
+              <div class="envelope-flap"></div>
+              <div class="envelope-body">
+                <div class="envelope-gold-trim"></div>
+              </div>
+              <!-- Pink Wax Seal -->
+              <div class="wax-seal" id="waxSeal">
+                <span>❤</span>
+              </div>
+            </div>
+
+            <!-- Unfolding Letter Sheet -->
+            <div class="letter-sheet" id="letterSheet">
+              <div class="letter-stamp">💌</div>
+              <div class="letter-content">
+                <div id="letterBodyText">
+                  <p class="letter-greeting"><strong>Happy Birthday chellowww! ❤️🥹</strong></p>
+
+                  <p>En life la nee vandhadhu oru unexpected moment dhaan aprm un kudu pesuvanu nenachi pathathae illa,
+                    but eppo yosichalum namma first meet, first conversation, andha starting days ellame enaku romba
+                    special. Eppadi strangers ah start panni, daily pesi, slowly orutharukku oruthar ivlo close aanom nu
+                    nenacha enaku romba santhoma ah irukku. Un kooda pesuna moments, namma siricha moments, china china
+                    fights, kovam, care, ellame enakku romba precious. Almost 1.5 years ah namma share panna memories
+                    ellam en life la marakka mudiyadha memories kandipa irukum.</p>
+
+                  <p>Sometimes namma situation epdi maarunalum, nee enakku evalo special nu mattum maaradhu. Unakku life
+                    la neraya happiness kedaikanum, nee achieve panna nenacha ellame achieve pannanum. Un dreams ellame
+                    nijham aaganum. Eppovume happy ah iru, nalla sapdu, health ah pathuko, andha cute smile ah lose
+                    pannadha. Unna first meet pannadhu la irundhu inniku varaikkum neraya memories irukku. Thank you for
+                    being a beautiful part of my life.</p>
+
+                  <p class="letter-closing"><strong>Once again Happy Birthday, chellowww! ❤️🫂</strong></p>
+                </div>
+                <p class="letter-sign-off">Forever yours,<br>Your Special Someone 💖</p>
+
+                <!-- Cute Bunny Illustration at bottom right -->
+                <div class="letter-bunny-art">
+                  <svg viewBox="0 0 60 50" fill="none">
+                    <circle cx="20" cy="30" r="14" fill="#ffffff" stroke="#fbcfe8" stroke-width="1.5" />
+                    <circle cx="38" cy="30" r="14" fill="#ffffff" stroke="#fbcfe8" stroke-width="1.5" />
+                    <ellipse cx="14" cy="14" rx="4" ry="10" fill="#ffffff" stroke="#fbcfe8" />
+                    <ellipse cx="22" cy="14" rx="4" ry="10" fill="#ffffff" stroke="#fbcfe8" />
+                    <ellipse cx="34" cy="14" rx="4" ry="10" fill="#ffffff" stroke="#fbcfe8" />
+                    <ellipse cx="42" cy="14" rx="4" ry="10" fill="#ffffff" stroke="#fbcfe8" />
+                    <!-- Tiny Heart held between them -->
+                    <path d="M29 32 Q 26 28 24 30 Q 22 33 29 38 Q 36 33 34 30 Q 32 28 29 32 Z" fill="#f43f7a" />
+                  </svg>
+                </div>
+
+                <!-- Final Action: Replay -->
+                <div
+                  style="margin-top: 24px; padding-top: 16px; border-top: 1px dashed #fbcfe8; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                  <button id="replayBtn" class="btn-primary" style="margin: 0; max-width: 220px; padding: 12px 20px;">
+                    <span>↺ Replay Experience</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

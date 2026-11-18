@@ -1,0 +1,1397 @@
+/* ==========================================================================
+   HEARTCRAFT BIRTHDAY CELEBRATION EXPERIENCE
+   Responsive, Romantic, Interactive Web Application
+   ========================================================================== */
+
+:root {
+  --primary: #f43f7a;
+  --primary-light: #ff6b98;
+  --primary-dark: #d81b60;
+  --accent-gold: #f59e0b;
+  --bg-top: #fff0f5;
+  --bg-mid: #fde2e8;
+  --bg-bottom: #fbcfe8;
+  --text-primary: #581c38;
+  --text-secondary: #831843;
+  --text-muted: #9d486f;
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 12px 36px rgba(244, 63, 122, 0.16);
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+  --radius-full: 9999px;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-script: 'Dancing Script', 'Caveat', cursive;
+  --font-sans: 'Outfit', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  font-family: var(--font-sans);
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 50%, var(--bg-bottom) 100%);
+  color: var(--text-primary);
+}
+
+/* Background floating hearts canvas */
+#heartsCanvas, #confettiCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+#confettiCanvas {
+  z-index: 999;
+}
+
+/* Outer Desktop Wrapper - Clean, normal, full-screen */
+.desktop-wrapper {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: transparent;
+  padding: 0;
+}
+
+/* Main Container - Responsive across Laptop and Mobile */
+.phone-container, .app-container {
+  width: 100%;
+  max-width: 920px;
+  height: 100%;
+  height: 100dvh;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+  margin: 0 auto;
+}
+
+/* Mobile size optimization */
+@media (max-width: 768px) {
+  .phone-container, .app-container {
+    max-width: 100%;
+  }
+}
+
+/* Top App Header */
+.app-header {
+  height: 56px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0;
+}
+
+.header-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.header-btn:active {
+  transform: scale(0.94);
+}
+
+.header-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.badge-counter {
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  letter-spacing: 0.5px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Main Screen Viewport */
+.screen-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+
+.screen-stage {
+  position: absolute;
+  inset: 0;
+  padding: 12px 22px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transform: translate3d(0, 16px, 0) scale(0.98);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  contain: content;
+  will-change: opacity, transform;
+}
+
+.screen-stage::-webkit-scrollbar {
+  display: none;
+}
+
+.screen-stage.active {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* Typography & Titles */
+.screen-title {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 5.5vw, 27px);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.screen-title.script {
+  font-family: var(--font-script);
+  font-size: clamp(28px, 7vw, 36px);
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+
+.screen-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+/* Big Pink Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 290px;
+  padding: 14px 26px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(244, 63, 122, 0.35);
+  transition: all 0.25s ease;
+  margin-top: 12px;
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+  box-shadow: 0 4px 12px rgba(244, 63, 122, 0.25);
+}
+
+/* ==========================================================================
+   STAGE 1: PASSCODE SCREEN
+   ========================================================================== */
+#stage-passcode {
+  justify-content: center;
+  gap: 14px;
+}
+
+.padlock-art {
+  width: 130px;
+  height: 130px;
+  position: relative;
+  margin-bottom: 6px;
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -8px, 0); }
+}
+
+.passcode-header {
+  text-align: center;
+}
+
+.passcode-header h2 {
+  font-size: 17px;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.passcode-inputs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.pin-box {
+  width: 48px;
+  height: 52px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 2px solid rgba(244, 63, 122, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pin-box.filled {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px rgba(244, 63, 122, 0.35);
+  transform: scale(1.06);
+}
+
+.pin-box.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(244, 63, 122, 0.2);
+}
+
+.passcode-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+/* Keypad Grid */
+.keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px 22px;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 4px;
+}
+
+@media (max-width: 380px) {
+  .keypad-grid {
+    gap: 10px 14px;
+  }
+  .key-btn {
+    width: 52px;
+    height: 52px;
+    font-size: 20px;
+  }
+}
+
+.key-btn {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 4px 12px rgba(244, 63, 122, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-style: italic;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.key-btn:active {
+  transform: scale(0.9);
+  background: rgba(244, 63, 122, 0.15);
+}
+
+.key-btn.action {
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-style: normal;
+}
+
+/* Shake on error */
+.shake {
+  animation: shake-anim 0.4s ease-in-out;
+}
+
+@keyframes shake-anim {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+/* ==========================================================================
+   STAGE 2: BIRTHDAY GREETING
+   ========================================================================== */
+#stage-greeting {
+  justify-content: space-around;
+  text-align: center;
+}
+
+.greeting-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.bears-art-wrapper {
+  width: 250px;
+  height: 230px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bears-art-wrapper svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 20px rgba(244, 63, 122, 0.15));
+}
+
+.interactive-dialog-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: 18px 24px;
+  box-shadow: var(--glass-shadow);
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.dialog-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   STAGE 3: BALLOON POPPING GAME
+   ========================================================================== */
+#stage-balloons {
+  justify-content: space-between;
+}
+
+.balloons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 300px;
+  margin: auto 0;
+  position: relative;
+}
+
+.balloon-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  position: relative;
+}
+
+.balloon-item:hover {
+  transform: translateY(-4px) scale(1.04);
+}
+
+.balloon-item:active {
+  transform: scale(0.92);
+}
+
+.balloon-svg-wrap {
+  width: 110px;
+  height: 140px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+  animation: balloon-bob 4s ease-in-out infinite alternate;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.balloon-item:nth-child(2) .balloon-svg-wrap { animation-delay: -1s; }
+.balloon-item:nth-child(3) .balloon-svg-wrap { animation-delay: -2s; }
+.balloon-item:nth-child(4) .balloon-svg-wrap { animation-delay: -3s; }
+
+@keyframes balloon-bob {
+  0% { transform: translate3d(0, 0, 0) rotate(-2deg); }
+  100% { transform: translate3d(0, -10px, 0) rotate(2deg); }
+}
+
+.balloon-item.popped .balloon-svg-wrap {
+  animation: pop-burst 0.35s forwards ease-out;
+}
+
+@keyframes pop-burst {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.8; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+/* Pop particle splash */
+.pop-sparkle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  animation: sparkle-explode 0.6s forwards ease-out;
+}
+
+@keyframes sparkle-explode {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+
+/* Hidden secret message revealed */
+.revealed-message-container {
+  min-height: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.revealed-words {
+  font-family: var(--font-script);
+  font-size: 38px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(244, 63, 122, 0.2);
+}
+
+/* ==========================================================================
+   STAGE 4: CAKE & CANDLE BLOWING
+   ========================================================================== */
+#stage-cake {
+  justify-content: space-between;
+  text-align: center;
+}
+
+.cake-visual-wrap {
+  width: 250px;
+  height: 250px;
+  margin: auto 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cake-visual-wrap svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.12));
+}
+
+/* Candle flame & flicker */
+.candle-flame {
+  transform-origin: center bottom;
+  animation: flame-flicker 1.8s infinite ease-in-out alternate;
+  filter: drop-shadow(0 0 10px #ffb703) drop-shadow(0 0 20px #fb8500);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes flame-flicker {
+  0% { transform: scale(1) rotate(-1deg); }
+  25% { transform: scale(1.06, 0.94) rotate(2deg); }
+  50% { transform: scale(0.96, 1.05) rotate(-2deg); }
+  75% { transform: scale(1.03, 0.97) rotate(1deg); }
+  100% { transform: scale(0.98, 1.02) rotate(-1deg); }
+}
+
+.flame-extinguished {
+  opacity: 0 !important;
+  transform: scale(0) !important;
+}
+
+/* Smoke puff */
+.smoke-particle {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: rgba(180, 180, 180, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: smoke-rise 1.5s forwards ease-out;
+}
+
+@keyframes smoke-rise {
+  0% { transform: translateY(0) scale(0.8); opacity: 0.8; }
+  100% { transform: translateY(-70px) scale(2.4); opacity: 0; filter: blur(4px); }
+}
+
+.wish-message {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--text-primary);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.6s ease;
+  margin-bottom: 8px;
+}
+
+.wish-message.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mic-action-btn {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  padding: 12px 24px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(244, 63, 122, 0.15);
+  transition: all 0.2s ease;
+}
+
+.mic-action-btn:active {
+  transform: scale(0.95);
+}
+
+.mic-listening {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(244, 63, 122, 0.25);
+  animation: pulse-music 1.2s infinite ease-in-out;
+}
+
+/* ==========================================================================
+   STAGE 5: ROSE BOUQUET & COMPLIMENTS (PROPER, NON-OVERLAPPING LAYOUT)
+   ========================================================================== */
+#stage-bouquet {
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.bouquet-container {
+  width: 100%;
+  height: 440px;
+  max-height: 520px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0;
+}
+
+.bouquet-trees-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.bouquet-center-art {
+  width: 220px;
+  height: 280px;
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 12px 24px rgba(225, 29, 72, 0.2));
+  animation: bouquet-float 3.5s ease-in-out infinite alternate;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes bouquet-float {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(0, -8px, 0); }
+}
+
+/* Floating Love Note Badges - Clean, Non-overlapping, Hardware-Accelerated */
+.compliment-badge {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  box-shadow: 0 4px 14px rgba(244, 63, 122, 0.12), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  z-index: 3;
+  cursor: pointer;
+  max-width: 46%;
+  word-break: break-word;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: badge-float 3.5s ease-in-out infinite alternate;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.compliment-badge:hover, .compliment-badge:active {
+  transform: scale(1.08) translate3d(0, 0, 0) !important;
+  color: var(--primary-dark);
+  box-shadow: 0 8px 24px rgba(244, 63, 122, 0.25);
+}
+
+/* Staggered vertically on alternating sides so they NEVER collide */
+.badge-1 {
+  top: 10px;
+  left: 8px;
+  animation-delay: 0s;
+}
+
+.badge-2 {
+  top: 65px;
+  right: 8px;
+  animation-delay: -0.7s;
+}
+
+.badge-3 {
+  top: 145px;
+  left: 6px;
+  animation-delay: -1.4s;
+}
+
+.badge-4 {
+  top: 215px;
+  right: 6px;
+  animation-delay: -2.1s;
+}
+
+.badge-5 {
+  top: 300px;
+  left: 8px;
+  animation-delay: -2.8s;
+}
+
+.badge-6 {
+  top: 360px;
+  right: 8px;
+  animation-delay: -3.5s;
+}
+
+@keyframes badge-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+/* ==========================================================================
+   STAGE 6: POLAROID PHOTO CARDS (SWIPING DECK)
+   ========================================================================== */
+#stage-photos {
+  justify-content: center;
+  gap: 16px;
+  overflow: visible;
+}
+
+.cards-deck-container {
+  width: 100%;
+  max-width: 340px;
+  height: 330px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  perspective: 1000px;
+}
+
+.polaroid-card {
+  position: absolute;
+  width: 240px;
+  height: 315px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14), 0 0 0 1px rgba(0, 0, 0, 0.04);
+  padding: 12px 12px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  touch-action: none;
+  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease;
+  transform-origin: center bottom;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.polaroid-card:active {
+  cursor: grabbing;
+}
+
+.photo-frame {
+  width: 100%;
+  height: 235px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f7e1ea;
+  position: relative;
+}
+
+.photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.photo-caption {
+  font-family: var(--font-script);
+  font-size: 22px;
+  color: var(--primary-dark);
+  font-weight: 700;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Stacking order - tight alignment, natural rotation, minimal vertical offset so it never overlaps the button */
+.polaroid-card.card-0 { z-index: 5; transform: scale(1) rotate(0deg); }
+.polaroid-card.card-1 { z-index: 4; transform: scale(0.97) translateY(4px) rotate(-3deg); opacity: 0.96; }
+.polaroid-card.card-2 { z-index: 3; transform: scale(0.94) translateY(8px) rotate(2.5deg); opacity: 0.92; }
+.polaroid-card.card-3 { z-index: 2; transform: scale(0.91) translateY(12px) rotate(-2deg); opacity: 0.88; }
+.polaroid-card.card-4 { z-index: 1; transform: scale(0.88) translateY(16px) rotate(2deg); opacity: 0.82; }
+
+#photosContinueBtn {
+  position: relative;
+  z-index: 20;
+  margin-top: 14px;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   STAGE 7: A MESSAGE FROM MY HEART (ENVELOPE & LETTER)
+   ========================================================================== */
+#stage-letter {
+  justify-content: space-between;
+}
+
+.letter-scene-container {
+  width: 100%;
+  height: 480px;
+  max-height: 520px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0;
+  overflow: hidden;
+}
+
+/* Envelope Container */
+.envelope-wrapper {
+  position: relative;
+  width: 270px;
+  height: 180px;
+  cursor: pointer;
+  transition: transform 0.4s ease;
+  z-index: 2;
+  animation: float-gentle 3s ease-in-out infinite;
+}
+
+.envelope-wrapper.open {
+  transform: translateY(120px) scale(0.9);
+  animation: none;
+}
+
+.envelope-body {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  border: 2px solid #ecd1dc;
+  border-radius: 10px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.envelope-gold-trim {
+  position: absolute;
+  inset: 4px;
+  border: 1.5px solid #d4af37;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 135px solid transparent;
+  border-right: 135px solid transparent;
+  border-top: 95px solid #faf5f7;
+  transform-origin: top center;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 3;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.08));
+}
+
+.envelope-wrapper.open .envelope-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.wax-seal {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle, #e11d48 0%, #be123c 100%);
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(190, 18, 60, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 22px;
+  z-index: 4;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.envelope-wrapper.open .wax-seal {
+  opacity: 0;
+  transform: translateX(-50%) scale(0);
+}
+
+/* Unfolding Letter Sheet */
+.letter-sheet {
+  position: absolute;
+  top: 10px;
+  width: 94%;
+  max-width: 380px;
+  max-height: 460px;
+  background: #fffdfa;
+  border-radius: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+  border: 1px solid #fae8ef;
+  padding: 24px 20px;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none; /* CRITICAL FIX: Allows clicking envelope underneath */
+  transform: translateY(60px) scale(0.85);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 5;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 63, 122, 0.4) transparent;
+}
+
+.letter-sheet::-webkit-scrollbar {
+  width: 4px;
+}
+
+.letter-sheet::-webkit-scrollbar-thumb {
+  background: rgba(244, 63, 122, 0.35);
+  border-radius: 4px;
+}
+
+.letter-sheet.expanded {
+  opacity: 1;
+  pointer-events: auto; /* Active once expanded */
+  transform: translateY(0) scale(1);
+}
+
+.letter-stamp {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 38px;
+  background: var(--primary);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(244, 63, 122, 0.3);
+}
+
+.letter-content {
+  font-family: var(--font-sans);
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: #3b1120;
+}
+
+.letter-content p {
+  margin-bottom: 14px;
+}
+
+.letter-greeting {
+  font-family: var(--font-script);
+  font-size: 27px;
+  line-height: 1.3;
+  color: var(--primary-dark);
+  margin-bottom: 14px;
+}
+
+.letter-closing {
+  font-family: var(--font-script);
+  font-size: 24px;
+  line-height: 1.3;
+  color: var(--primary-dark);
+  margin-top: 14px;
+}
+
+.letter-sign-off {
+  font-family: var(--font-script);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.letter-bunny-art {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.letter-bunny-art svg {
+  width: 50px;
+  height: 45px;
+}
+
+/* ==========================================================================
+   STAGE 8: ONE LAST THING... (GIFT BOX & CELEBRATION)
+   ========================================================================== */
+#stage-gift {
+  justify-content: space-between;
+  text-align: center;
+}
+
+.gift-box-scene {
+  width: 100%;
+  height: 320px;
+  margin: auto 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gift-box-wrapper {
+  width: 140px;
+  height: 140px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.gift-box-wrapper:active {
+  transform: scale(0.92);
+}
+
+.gift-tap-badge {
+  position: absolute;
+  top: 0;
+  right: -10px;
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(244, 63, 122, 0.4);
+  animation: pulse-music 1.2s infinite ease-in-out;
+}
+
+/* Wiggle animation when tapped */
+.gift-wiggle {
+  animation: gift-shake 0.4s ease-in-out;
+}
+
+@keyframes gift-shake {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-8deg) scale(1.08); }
+  75% { transform: rotate(8deg) scale(1.08); }
+}
+
+/* Revealed Celebration Content */
+.celebration-content {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.celebration-content.visible {
+  opacity: 1;
+  transform: scale(1);
+  display: flex;
+}
+
+.celebration-illustration {
+  width: 200px;
+  height: 170px;
+  filter: drop-shadow(0 10px 24px rgba(244, 63, 122, 0.2));
+}
+
+.final-love-text {
+  font-family: var(--font-script);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.final-birthday-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.gift-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 290px;
+}
+
+.btn-secondary {
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:active {
+  transform: scale(0.96);
+}
+
+/* ==========================================================================
+   CUSTOMIZE / SETTINGS MODAL
+   ========================================================================== */
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-height: 85%;
+  background: #ffffff;
+  border-radius: 28px 28px 0 0;
+  padding: 24px 20px;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active .modal-sheet {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.modal-header h3 {
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ffd4e2;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(244, 63, 122, 0.15);
+}
+
+/* ==========================================================================
+   LAPTOP / DESKTOP RESPONSIVE ADAPTATIONS (min-width: 768px)
+   ========================================================================== */
+@media (min-width: 768px) {
+  .app-header {
+    height: 64px;
+    padding: 0 32px;
+  }
+
+  .screen-stage {
+    padding: 24px 40px 36px 40px;
+  }
+
+  .screen-title {
+    font-size: clamp(28px, 3.2vw, 38px);
+  }
+
+  .screen-title.script {
+    font-size: clamp(34px, 4.2vw, 48px);
+  }
+
+  /* Stage 1: Passcode */
+  .padlock-art {
+    width: 150px;
+    height: 150px;
+  }
+  .pin-box {
+    width: 56px;
+    height: 62px;
+    font-size: 26px;
+  }
+  .keypad-grid {
+    max-width: 310px;
+    gap: 16px 26px;
+  }
+  .key-btn {
+    width: 68px;
+    height: 68px;
+    font-size: 26px;
+  }
+
+  /* Stage 2: Greeting */
+  .bears-art-wrapper {
+    width: 320px;
+    height: 270px;
+  }
+  .interactive-dialog-card {
+    max-width: 400px;
+    padding: 22px 30px;
+  }
+
+  /* Stage 3: Balloons - 4 in a row on laptop */
+  .balloons-grid {
+    grid-template-columns: repeat(4, 1fr);
+    max-width: 720px;
+    gap: 28px;
+  }
+  .balloon-svg-wrap {
+    width: 125px;
+    height: 160px;
+  }
+  .revealed-words {
+    font-size: 46px;
+  }
+
+  /* Stage 4: Cake */
+  .cake-visual-wrap {
+    width: 310px;
+    height: 310px;
+  }
+  .wish-message {
+    font-size: 26px;
+  }
+
+  /* Stage 5: Rose Bouquet */
+  .bouquet-container {
+    height: 500px;
+    max-width: 820px;
+  }
+  .bouquet-center-art {
+    width: 250px;
+    height: 320px;
+  }
+  .compliment-badge {
+    font-size: 14.5px;
+    padding: 10px 18px;
+    max-width: 280px;
+  }
+  .badge-1 { top: 25px; left: 35px; }
+  .badge-2 { top: 80px; right: 35px; }
+  .badge-3 { top: 180px; left: 30px; }
+  .badge-4 { top: 245px; right: 30px; }
+  .badge-5 { top: 340px; left: 40px; }
+  .badge-6 { top: 405px; right: 40px; }
+
+  /* Stage 6: Polaroid Cards Deck (Clean, spacious, zero overlap) */
+  #stage-photos {
+    justify-content: center;
+    gap: 18px;
+  }
+  .cards-deck-container {
+    height: 350px;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .polaroid-card {
+    width: 255px;
+    height: 330px;
+    padding: 13px 13px 18px 13px;
+  }
+  .photo-frame {
+    height: 245px;
+  }
+  .photo-caption {
+    font-size: 23px;
+    margin-top: 8px;
+  }
+  #photosContinueBtn {
+    margin-top: 16px;
+    z-index: 25;
+  }
+
+  /* Stage 7: Letter */
+  .letter-scene-container {
+    height: 520px;
+  }
+  .envelope-wrapper {
+    width: 340px;
+    height: 220px;
+  }
+  .envelope-flap {
+    border-left-width: 170px;
+    border-right-width: 170px;
+    border-top-width: 115px;
+  }
+  .wax-seal {
+    top: 90px;
+    width: 52px;
+    height: 52px;
+  }
+  .letter-sheet {
+    max-width: 620px;
+    width: 90%;
+    max-height: 480px;
+    padding: 34px 38px;
+  }
+  .letter-content {
+    font-size: 16px;
+    line-height: 1.8;
+  }
+  .letter-greeting {
+    font-size: 30px;
+  }
+  .letter-closing {
+    font-size: 26px;
+  }
+}
